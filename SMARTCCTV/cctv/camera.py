@@ -20,7 +20,7 @@ def yolo(frame, size, score_threshold, nms_threshold):
     # https://www.codespeedy.com/yolo-object-detection-from-image-with-opencv-and-python/
 
     # ㅛ
-    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()] # i[0]
+    output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers()] # i[0]
     #print(output_layers)
     # 클래스의 갯수만큼 랜덤 RGB 배열을 생성
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
@@ -180,8 +180,8 @@ class Frame:
 
         frame = yolo(frame=frame, size=size_list[0], score_threshold=0.4, nms_threshold=0.4)
 
-        frame_flip = cv2.flip(frame, 1)
-        ret, frame = cv2.imencode('.jpg', frame_flip)
+        #frame_flip = cv2.flip(frame, 1)
+        ret, frame = cv2.imencode('.jpg', frame)
         return frame.tobytes()
 
 '''

@@ -84,6 +84,8 @@ def gen1(camera):
 def video_stream1(request):
     #t2 = Thread(target=test2)
     #t2.start()
+    while len(CAMERA.threads)<=1:
+        pass
     print(22222222222222222222222222222222222222222222222222222222222)
     return StreamingHttpResponse(gen1(CAMERA),
                     content_type='multipart/x-mixed-replace; boundary=frame')
