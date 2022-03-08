@@ -1,16 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title> Live video stream </title>
-  </head>
-  <body>
-  <h1>{{ user.username }}</h1>
-  <center>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+<body>
+<h1>{{ user.username }}</h1>
+<center>
     <h1> Live Video Stream </h1>
     <!-- <img src = "{% url 'video_stream' %}"> -->
     <!-- <img src = "{% url 'video_stream1' %}"> -->
-      <a href="test1" target="_blank">test1</a>
-      <a href="test2" target="_blank">test2</a>
-  </center>
-  </body>
+    <a href="test1" target="_blank">test1</a>
+    <a href="test2" target="_blank">test2</a>
+</center>
+</body>
 </html>
+<script>
+
+
+    setInterval(function () {
+        $.ajax({
+            url: '/cctv/ajax/',
+            type: "POST",
+            dataType: "json",
+            data: {'send_data': 'Send this message'},
+            success: function (data) {
+                console.log(data);
+            }, beforeSend: function () {
+                console.log("i am waiting");
+            }, complete: function () {
+                console.log("i am done");
+            }, error: function (request, status, error) {
+                console.log('i am failed');
+            }
+        })
+    }, 1000);
+</script>
+
+    $.ajax({
+        url: '/cctv/ajax/',
+        type: "POST",
+        dataType: "json",
+        data: {'send_data': 'Send this message'},
+        success: function (data) {
+            console.log(data);
+        }, beforeSend: function () {
+            console.log("i am waiting");
+        }, complete: function () {
+            console.log("i am done");
+        }, error: function (request, status, error) {
+            console.log('i am failed');
+        }
+    });

@@ -28,7 +28,9 @@ def video_stream(request):
 '''
 
 from django.shortcuts import render
-from django.http.response import StreamingHttpResponse
+from django.http.response import StreamingHttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from cctv.camera import VideoCamera
 from django.contrib.auth.models import User
 from threading import Thread
@@ -125,3 +127,9 @@ def test22(request):
     }
 
     return render(request, 'cctv/test2.html', context=context)
+
+@csrf_exempt
+def ajax_method(request):
+    receive_message = request.POST.get('send_data')
+    send_message = {'send_data' : "test success"}
+    return JsonResponse(send_message)

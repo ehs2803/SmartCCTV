@@ -6,4 +6,5 @@ urlpatterns = [
     path('video_stream1', views.video_stream1, name='video_stream1'),
     path('test1/', views.test11),
     path('test2/', views.test22),
+    path('ajax/', views.ajax_method),
 ]
