@@ -37,6 +37,7 @@ from threading import Thread
 
 
 CAMERA  = None
+check_cam = []
 
 # Create your views here.
 def index(request):
@@ -66,7 +67,7 @@ def gen(camera):
         pass
     while True:
         print(22222222222)
-        frame = camera.threads[0].get_frame()
+        frame = camera.threads[0].get_frame(0)
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -79,7 +80,7 @@ def gen1(camera):
     print('@@@')
     while len(camera.threads)>=2 and True:
         print(33333333333)
-        frame = camera.threads[1].get_frame()
+        frame = camera.threads[1].get_frame(1)
         yield (b'--frame\r\n'
                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -130,6 +131,13 @@ def test22(request):
 
 @csrf_exempt
 def ajax_method(request):
+    sendmessage = ""
+    for i in check_cam:
+        if i==False:
+            sendmessage = sendmessage+"0"
+        else:
+            sendmessage = sendmessage+"1"
+
     receive_message = request.POST.get('send_data')
-    send_message = {'send_data' : "test success"}
+    send_message = {'send_data' : sendmessage}
     return JsonResponse(send_message)

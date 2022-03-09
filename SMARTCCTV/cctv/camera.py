@@ -3,14 +3,13 @@ import numpy as np
 import socket
 import struct  # 바이트(bytes) 형식의 데이터 처리 모듈
 import pickle  # 바이트(bytes) 형식의 데이터 변환 모듈
-import random
-from threading import Thread
-import threading
+
+from cctv.views import check_cam
 
 ip = '127.0.0.1'
 port = 50002
 
-def yolo(frame, size, score_threshold, nms_threshold):
+def yolo(frame, size, score_threshold, nms_threshold, index):
     # YOLO 네트워크 불러오기
     net = cv2.dnn.readNet("data/yolov4-tiny.weights", "data/yolov4-tiny.cfg")
     layer_names = net.getLayerNames()
@@ -75,22 +74,26 @@ def yolo(frame, size, score_threshold, nms_threshold):
     #for index in indexes:
     #    print(index, end=' ')
     #print("\n\n============================== classes ==============================")
-
+    ch=False
     for i in range(len(boxes)):
         if i in indexes:
             x, y, w, h = boxes[i]
             class_name = classes[class_ids[i]]
-            label = f"{class_name} {confidences[i]:.2f}"
-            color = colors[class_ids[i]]
+            if class_name=='person':
+                ch=True
+                check_cam[index]=True
+                label = f"{class_name} {confidences[i]:.2f}"
+                color = colors[class_ids[i]]
 
-            # 사각형 테두리 그리기 및 텍스트 쓰기
-            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            cv2.rectangle(frame, (x - 1, y), (x + len(class_name) * 13 + 65, y - 25), color, -1)
-            cv2.putText(frame, label, (x, y - 8), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 0), 2)
+                # 사각형 테두리 그리기 및 텍스트 쓰기
+                cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+                cv2.rectangle(frame, (x - 1, y), (x + len(class_name) * 13 + 65, y - 25), color, -1)
+                cv2.putText(frame, label, (x, y - 8), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 0), 2)
 
-            # 탐지된 객체의 정보 출력
-            #print(f"[{class_name}({i})] conf: {confidences[i]} / x: {x} / y: {y} / width: {w} / height: {h}")
-
+                # 탐지된 객체의 정보 출력
+                #print(f"[{class_name}({i})] conf: {confidences[i]} / x: {x} / y: {y} / width: {w} / height: {h}")
+    if ch==False:
+        check_cam[index]=False
     return frame
 
 # 클래스 리스트
@@ -118,7 +121,6 @@ class VideoCamera(object):
     def __init__(self):
         self.threads = []
 
-
     def __del__(self):
         cv2.destroyAllWindows()
 
@@ -131,6 +133,7 @@ class VideoCamera(object):
                 conn, addr = sock.accept()
                 f = Frame(conn)
                 self.threads.append(f)
+                check_cam.append(False)
             sock.close()
             print('server shutdown')
 
@@ -140,7 +143,7 @@ class Frame:
         self.data_buffer = b""
         self.data_size = struct.calcsize("L")
 
-    def get_frame(self):
+    def get_frame(self, n):
         # 설정한 데이터의 크기보다 버퍼에 저장된 데이터의 크기가 작은 경우
         while len(self.data_buffer) <self.data_size:
             # 데이터 수신
@@ -178,7 +181,7 @@ class Frame:
         #    - IMREAD_COLOR : 이미지를 COLOR로 읽음
         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
 
-        frame = yolo(frame=frame, size=size_list[0], score_threshold=0.4, nms_threshold=0.4)
+        frame = yolo(frame=frame, size=size_list[0], score_threshold=0.4, nms_threshold=0.4, index=n)
 
         #frame_flip = cv2.flip(frame, 1)
         ret, frame = cv2.imencode('.jpg', frame)

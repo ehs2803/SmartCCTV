@@ -17,8 +17,6 @@
 </body>
 </html>
 <script>
-
-
     setInterval(function () {
         $.ajax({
             url: '/cctv/ajax/',
@@ -27,6 +25,12 @@
             data: {'send_data': 'Send this message'},
             success: function (data) {
                 console.log(data);
+                if(data=="1"){
+                    console.log("detect person");
+                }
+                else{
+                    console.log("not detect person");
+                }
             }, beforeSend: function () {
                 console.log("i am waiting");
             }, complete: function () {
