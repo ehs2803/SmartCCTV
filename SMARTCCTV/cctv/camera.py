@@ -4,7 +4,8 @@ import socket
 import struct  # 바이트(bytes) 형식의 데이터 처리 모듈
 import pickle  # 바이트(bytes) 형식의 데이터 변환 모듈
 
-from cctv.views import check_cam
+#from cctv.views import check_cam
+import cctv.views
 
 ip = '127.0.0.1'
 port = 50002
@@ -81,7 +82,7 @@ def yolo(frame, size, score_threshold, nms_threshold, index):
             class_name = classes[class_ids[i]]
             if class_name=='person':
                 ch=True
-                check_cam[index]=True
+                cctv.views.check_cam[index]=True
                 label = f"{class_name} {confidences[i]:.2f}"
                 color = colors[class_ids[i]]
 
@@ -93,7 +94,7 @@ def yolo(frame, size, score_threshold, nms_threshold, index):
                 # 탐지된 객체의 정보 출력
                 #print(f"[{class_name}({i})] conf: {confidences[i]} / x: {x} / y: {y} / width: {w} / height: {h}")
     if ch==False:
-        check_cam[index]=False
+        cctv.views.check_cam[index]=False
     return frame
 
 # 클래스 리스트
@@ -133,7 +134,7 @@ class VideoCamera(object):
                 conn, addr = sock.accept()
                 f = Frame(conn)
                 self.threads.append(f)
-                check_cam.append(False)
+                cctv.views.check_cam.append(False)
             sock.close()
             print('server shutdown')
 

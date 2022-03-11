@@ -131,7 +131,7 @@ def test22(request):
 
 @csrf_exempt
 def ajax_method(request):
-    sendmessage = ""
+    sendmessage = "1"
     for i in check_cam:
         if i==False:
             sendmessage = sendmessage+"0"
