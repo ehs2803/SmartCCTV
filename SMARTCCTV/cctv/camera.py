@@ -4,6 +4,12 @@ import socket
 import struct  # 바이트(bytes) 형식의 데이터 처리 모듈
 import pickle  # 바이트(bytes) 형식의 데이터 변환 모듈
 
+from playsound import playsound
+
+'''
+ tts_b_path = 'data/blink_count' + str(self.eye_count_min) + '.mp3'  # 알림 음성 파일
+            playsound(tts_b_path)  # 음성으로 알림
+'''
 #from cctv.views import check_cam
 import cctv.views
 

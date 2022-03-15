@@ -35,6 +35,7 @@ from cctv.camera import VideoCamera
 from django.contrib.auth.models import User
 from threading import Thread
 
+from playsound import playsound
 
 CAMERA  = None
 check_cam = []

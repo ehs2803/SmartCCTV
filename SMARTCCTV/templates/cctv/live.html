@@ -37,13 +37,13 @@
     <center>{{ user.username }}</center>
 </h1>
 <center>
-    <h1> Live Video Stream </h1>
+    <h1> Live CCTV Video Stream </h1>
     <!-- <img src = "{% url 'video_stream' %}"> -->
     <!-- <img src = "{% url 'video_stream1' %}"> -->
-    <div class="cctv1"><a href="test1" target="_blank">test1</a></div>
+    <div class="cctv1"><a href="test1" target="_blank">1번 CCTV</a></div>
     <br>
     <br>
-    <div class="cctv2"><a href="test2" target="_blank">test2</a></div>
+    <div class="cctv2"><a href="test2" target="_blank">2번 CCTV</a></div>
 </center>
 </body>
 </html>
@@ -74,6 +74,7 @@
     }, 1000);
 </script>
 
+<!--
 $.ajax({
 url: '/cctv/ajax/',
 type: "POST",
@@ -89,3 +90,4 @@ console.log("i am done");
 console.log('i am failed');
 }
 });
+-->
