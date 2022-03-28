@@ -4,7 +4,6 @@ import socket
 import struct  # 바이트(bytes) 형식의 데이터 처리 모듈
 import pickle  # 바이트(bytes) 형식의 데이터 변환 모듈
 import torch
-import argparse
 from playsound import playsound
 
 from cctv.Detection.Utils import ResizePadding
@@ -13,6 +12,10 @@ from cctv.PoseEstimateLoader import SPPE_FastPose
 from cctv.fn import draw_single
 from cctv.Track.Tracker import Detection, Tracker
 from cctv.ActionsEstLoader import TSSTG
+
+import cctv.views
+
+RPICNT = 0
 
 def preproc2(image):
     resize_fn = ResizePadding(384, 384) # 기본 384*384 size~
@@ -49,8 +52,7 @@ def init_user():
     return detect_model,pose_model,tracker,action_model,inp_dets
 
 
-def detect_human_algorithms(frame_img, init_args):
-    # cap = cv2.VideoCapture(0)
+def detect_human_algorithms(frame_img, init_args, cindex):
     detect_model, pose_model, tracker, action_model, inp_dets = init_args
 
     # 새로 추가한 label classes
@@ -69,6 +71,7 @@ def detect_human_algorithms(frame_img, init_args):
 
     outvid = False
 
+
     # 여기가 그거였을 거여 아마 그 시작?
     frame = frame_img  # cam.getitem()
 
@@ -86,26 +89,51 @@ def detect_human_algorithms(frame_img, init_args):
     detections = []  # List of Detections object for tracking.
     if detected is not None:
 
-        # Predict skeleton pose of each bboxs.
-        poses = pose_model.predict(frame, detected[:, 0:4], detected[:, 4])
-        # Create Detections object.
-        detections = [Detection(kpt2bbox(ps['keypoints'].numpy()),
-                                np.concatenate((ps['keypoints'].numpy(),
-                                                ps['kp_score'].numpy()), axis=1),
-                                ps['kp_score'].mean().numpy()) for ps in poses]
+        detected_hum = []
+        for det_obj in detected:
+            if torch.equal(det_obj.type(torch.int64)[6], torch.tensor(0)):
+                detected_hum.append(det_obj.tolist())
+
+        if detected_hum:
+            detected_hum = torch.tensor(detected_hum)
+            cctv.views.check_cam[cindex] = True
+        else:
+            detected_hum = None
+            cctv.views.check_cam[cindex] = False
+
+        if detected_hum is not None:  # 사람만 들어갈 수 있도록 조정
+
+            # Predict skeleton pose of each bboxs.
+            poses = pose_model.predict(frame, detected_hum[:, 0:4], detected_hum[:, 4])
+            # Create Detections object.
+            detections = [Detection(kpt2bbox(ps['keypoints'].numpy()),
+                                    np.concatenate((ps['keypoints'].numpy(),
+                                                    ps['kp_score'].numpy()), axis=1),
+                                    ps['kp_score'].mean().numpy()) for ps in poses]
 
         # # 원래 있던 yolo VISUALIZE.
-        for bb in detected[:, :]:
-            detect_name = bb.type(torch.int64)[6]
-            name = detect_name.tolist()
-            if torch.equal(detect_name, torch.tensor(0)):  # 사람만 인식하여 그림 그려줌
-                frame = cv2.rectangle(frame, (int(bb[0]), int(bb[1])), (int(bb[2]), int(bb[3])), (0, 0, 255), 1)
-                frame = cv2.putText(frame, classes[name], (int(bb[0]) + 5, int(bb[1]) - 15), cv2.FONT_HERSHEY_COMPLEX,
+        # (x1, y1, x2, y2, object_conf, class_score, class_pred)
+        human = []
+        bed = []
+        for bb in detected[:, :]:  # torch.cat( [detected[:, :], detected_oth[:,:]]):
+            detect_obj = bb.type(torch.int64).tolist()
+            detect_name = detect_obj[6]
+
+            name = detect_name
+
+            x1, y1, x2, y2 = detect_obj[0:4]
+
+            # if torch.equal(detect_name ,torch.tensor(0)): # <- 사람만 인식하여 그림 그려줌
+            if detect_name == 0:
+                frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 1)
+                frame = cv2.putText(frame, classes[name], (x1 + 5, y1 - 15), cv2.FONT_HERSHEY_COMPLEX,
                                     0.4, (0, 0, 255), 1)
+                human.append(detect_obj[0:4])
             else:
-                frame = cv2.rectangle(frame, (int(bb[0]), int(bb[1])), (int(bb[2]), int(bb[3])), (0, 255, 0), 1)
-                frame = cv2.putText(frame, classes[name], (int(bb[0]) + 5, int(bb[1]) - 15), cv2.FONT_HERSHEY_COMPLEX,
+                frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
+                frame = cv2.putText(frame, classes[name], (x1 + 5, y1 - 15), cv2.FONT_HERSHEY_COMPLEX,
                                     0.4, (0, 255, 0), 1)
+
 
     # Update tracks by matching each track information of current and previous frame or
     # create a new track if no matched.
@@ -132,8 +160,14 @@ def detect_human_algorithms(frame_img, init_args):
             elif action_name == 'Lying Down':
                 clr = (255, 200, 0)
 
-            if action_name != 'Walking':  # action_name 이 핵심임 돌려보면 알거에요
+            if action_name == 'Fall Down':  # action_name이 핵심
                 print("act", action_name)
+                cctv.views.check_cam[cindex] = True
+                tts_s_path = 'data/falldown_alarm.mp3'  # 음성 알림 파일
+                playsound(tts_s_path)  # 음성으로 알림
+            else:
+                cctv.views.check_cam[cindex] = False
+
         # VISUALIZE.
         if track.time_since_update == 0:
             if True:
@@ -148,50 +182,43 @@ def detect_human_algorithms(frame_img, init_args):
 
     frame = frame[:, :, ::-1]
 
+
     return frame
 
-'''
- tts_b_path = 'data/blink_count' + str(self.eye_count_min) + '.mp3'  # 알림 음성 파일
-            playsound(tts_b_path)  # 음성으로 알림
-'''
-#from cctv.views import check_cam
-import cctv.views
 
 ip = '127.0.0.1'
 port = 50002
 
-# 입력 사이즈 리스트 (Yolo 에서 사용되는 네크워크 입력 이미지 사이즈)
-size_list = [320, 416, 608]
-# 320×320 it’s small so less accuracy but better speed
-# 609×609 it’s bigger so high accuracy and slow speed
-# 416×416 it’s in the middle and you get a bit of both.
-
-
 class VideoCamera(object):
     def __init__(self):
-        self.threads = []
+        self.threads = [] # 복수개의 라즈레리파이 객체
+        self.RPICNT=0
 
     def __del__(self):
         cv2.destroyAllWindows()
 
     def run_server(self):
+        global RPICNT
         with socket.socket() as sock:
             sock.bind((ip, port))
             while True:
                 # 소켓 스레드 통신
                 sock.listen(5)
-                conn, addr = sock.accept()
-                f = Frame(conn)
-                self.threads.append(f)
-                cctv.views.check_cam.append(False)
+                conn, addr = sock.accept() # 소켓통신 연결
+                cctv.views.check_cam.append(False)  # 감지 여부 체크를 위한 리스트 초기화
+                f = Frame(conn) # Frame을 얻기위한 객체 생성
+                self.threads.append(f) # Frame을 얻기위한 객체 리스트에 저장해 관리
+                RPICNT = RPICNT + 1
             sock.close()
             print('server shutdown')
+
 init_args_user =init_user()
 class Frame:
     def __init__(self, client_socket):
         self.client_socket = client_socket
         self.data_buffer = b""
         self.data_size = struct.calcsize("L")
+        self.rpIndex = RPICNT
 
     def get_frame(self, n):
         # 설정한 데이터의 크기보다 버퍼에 저장된 데이터의 크기가 작은 경우
@@ -204,10 +231,6 @@ class Frame:
         self.data_buffer = self.data_buffer[self.data_size:]
 
         # struct.unpack : 변환된 바이트 객체를 원래의 데이터로 변환
-        # - > : 빅 엔디안(big endian)
-        #   - 엔디안(endian) : 컴퓨터의 메모리와 같은 1차원의 공간에 여러 개의 연속된 대상을 배열하는 방법
-        #   - 빅 엔디안(big endian) : 최상위 바이트부터 차례대로 저장
-        # - L : 부호없는 긴 정수(unsigned long) 4 bytes
         frame_size = struct.unpack(">L", packed_data_size)[0]
 
         # 프레임 데이터의 크기보다 버퍼에 저장된 데이터의 크기가 작은 경우
@@ -226,14 +249,9 @@ class Frame:
         frame = pickle.loads(frame_data)
 
         # imdecode : 이미지(프레임) 디코딩
-        # 1) 인코딩된 이미지 배열
-        # 2) 이미지 파일을 읽을 때의 옵션
-        #    - IMREAD_COLOR : 이미지를 COLOR로 읽음
         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
         frame = preproc2(frame)
-        frame = detect_human_algorithms(frame, init_args_user)
+        frame = detect_human_algorithms(frame, init_args_user, self.rpIndex)
 
-        #frame = yolo(frame=frame, size=size_list[0], score_threshold=0.4, nms_threshold=0.4, index=n)
-        #frame_flip = cv2.flip(frame, 1)
         ret, frame = cv2.imencode('.jpg', frame)
         return frame.tobytes()

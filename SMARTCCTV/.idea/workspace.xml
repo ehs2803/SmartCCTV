@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5aafa4aa-c666-4ddf-8c56-79f40e2299a8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/data/falldown_alarm.mp3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RP/rp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../RP/rp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SMARTCCTV.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SMARTCCTV.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cctv/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cctv/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cctv/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/cctv/live.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/live.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/cctv/test1.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/cctv1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/cctv/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/cctv2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/singlePage/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/singlePage/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -15,6 +26,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="265BVJHuWxZc0x3zA1VFZK8Et7O" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -27,7 +41,33 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
   </component>
-  <component name="RunManager" selected="Python.email">
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hr280\OneDrive\Desktop\DSGIT\SmartCCTV\SMARTCCTV\data" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.rp">
+    <configuration name="camera" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SMARTCCTV" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/cctv" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cctv/camera.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="email" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="SMARTCCTV" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -42,6 +82,48 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../email/email.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="rp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SMARTCCTV" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../RP" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../RP/rp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="urls" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="SMARTCCTV" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/cctv" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cctv/urls.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -75,6 +157,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.rp" />
+        <item itemvalue="Python.urls" />
+        <item itemvalue="Python.camera" />
         <item itemvalue="Python.email" />
       </list>
     </recent_temporary>
@@ -98,8 +183,5 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SMARTCCTV$email.coverage" NAME="email Coverage Results" MODIFIED="1647312400483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../email" />
   </component>
 </project>

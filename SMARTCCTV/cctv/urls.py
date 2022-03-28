@@ -3,9 +3,9 @@ from cctv import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('video_stream', views.video_stream, name='video_stream'),
-    path('video_stream1', views.video_stream1, name='video_stream1'),
-    path('test1/', views.test11),
-    path('test2/', views.test22),
+    path('video_stream', views.video_stream1, name='video_stream1'),
+    path('video_stream1', views.video_stream2, name='video_stream2'),
+    path('cctv1/', views.cctv1),
+    path('cctv2/', views.cctv2),
     path('ajax/', views.ajax_method),
 ]
