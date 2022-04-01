@@ -69,14 +69,9 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator",
                "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush", "wheelchair"]
 
-    outvid = False
-
-
-    # 여기가 그거였을 거여 아마 그 시작?
     frame = frame_img  # cam.getitem()
 
     # Detect humans bbox in the frame with detector model.
-
     detected = detect_model.detect(frame, need_resize=False, expand_bb=10)
 
     # Predict each tracks bbox of current frame from previous frames information with Kalman filter.
@@ -88,21 +83,17 @@ def detect_human_algorithms(frame_img, init_args, cindex):
 
     detections = []  # List of Detections object for tracking.
     if detected is not None:
-
         detected_hum = []
         for det_obj in detected:
             if torch.equal(det_obj.type(torch.int64)[6], torch.tensor(0)):
                 detected_hum.append(det_obj.tolist())
-
         if detected_hum:
             detected_hum = torch.tensor(detected_hum)
             cctv.views.check_cam[cindex] = True
         else:
             detected_hum = None
             cctv.views.check_cam[cindex] = False
-
         if detected_hum is not None:  # 사람만 들어갈 수 있도록 조정
-
             # Predict skeleton pose of each bboxs.
             poses = pose_model.predict(frame, detected_hum[:, 0:4], detected_hum[:, 4])
             # Create Detections object.
@@ -110,7 +101,6 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                                     np.concatenate((ps['keypoints'].numpy(),
                                                     ps['kp_score'].numpy()), axis=1),
                                     ps['kp_score'].mean().numpy()) for ps in poses]
-
         # # 원래 있던 yolo VISUALIZE.
         # (x1, y1, x2, y2, object_conf, class_score, class_pred)
         human = []
@@ -118,11 +108,8 @@ def detect_human_algorithms(frame_img, init_args, cindex):
         for bb in detected[:, :]:  # torch.cat( [detected[:, :], detected_oth[:,:]]):
             detect_obj = bb.type(torch.int64).tolist()
             detect_name = detect_obj[6]
-
             name = detect_name
-
             x1, y1, x2, y2 = detect_obj[0:4]
-
             # if torch.equal(detect_name ,torch.tensor(0)): # <- 사람만 인식하여 그림 그려줌
             if detect_name == 0:
                 frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 1)
@@ -133,17 +120,13 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                 frame = cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 1)
                 frame = cv2.putText(frame, classes[name], (x1 + 5, y1 - 15), cv2.FONT_HERSHEY_COMPLEX,
                                     0.4, (0, 255, 0), 1)
-
-
     # Update tracks by matching each track information of current and previous frame or
     # create a new track if no matched.
     tracker.update(detections)
 
     for i, track in enumerate(tracker.tracks):
-
         if not track.is_confirmed():
             continue
-
         track_id = track.track_id
         bbox = track.to_tlbr().astype(int)
         center = track.get_center().astype(int)
@@ -159,7 +142,6 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                 clr = (255, 0, 0)
             elif action_name == 'Lying Down':
                 clr = (255, 200, 0)
-
             if action_name == 'Fall Down':  # action_name이 핵심
                 print("act", action_name)
                 cctv.views.check_cam[cindex] = True
@@ -167,7 +149,6 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                 playsound(tts_s_path)  # 음성으로 알림
             else:
                 cctv.views.check_cam[cindex] = False
-
         # VISUALIZE.
         if track.time_since_update == 0:
             if True:
@@ -179,10 +160,7 @@ def detect_human_algorithms(frame_img, init_args, cindex):
                                 0.4, clr, 1)
     # Show Frame.
     frame = cv2.resize(frame, (0, 0), fx=2., fy=2.)
-
     frame = frame[:, :, ::-1]
-
-
     return frame
 
 
@@ -225,27 +203,21 @@ class Frame:
         while len(self.data_buffer) <self.data_size:
             # 데이터 수신
             self.data_buffer += self.client_socket.recv(4096)
-
         # 버퍼의 저장된 데이터 분할
         packed_data_size = self.data_buffer[:self.data_size]
         self.data_buffer = self.data_buffer[self.data_size:]
-
         # struct.unpack : 변환된 바이트 객체를 원래의 데이터로 변환
         frame_size = struct.unpack(">L", packed_data_size)[0]
-
         # 프레임 데이터의 크기보다 버퍼에 저장된 데이터의 크기가 작은 경우
         while len(self.data_buffer) < frame_size:
             # 데이터 수신
             self.data_buffer += self.client_socket.recv(4096)
-
         # 프레임 데이터 분할
         frame_data = self.data_buffer[:frame_size]
         self.data_buffer = self.data_buffer[frame_size:]
-
         print("수신 프레임 크기 : {} bytes".format(frame_size))
-
         # loads : 직렬화된 데이터를 역직렬화
-        # - 역직렬화(de-serialization) : 직렬화된 파일이나 바이트 객체를 원래의 데이터로 복원하는 것
+        # 역직렬화(de-serialization) : 직렬화된 파일이나 바이트 객체를 원래의 데이터로 복원하는 것
         frame = pickle.loads(frame_data)
 
         # imdecode : 이미지(프레임) 디코딩

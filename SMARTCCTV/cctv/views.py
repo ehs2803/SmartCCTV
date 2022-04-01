@@ -7,14 +7,14 @@ from django.contrib.auth.models import User
 from threading import Thread
 
 CAMERA  = None
-check_cam = []
+check_cam = [] # 쓰러짐 감지 여부 판단
 
 # Create your views here.
 def index(request):
     global CAMERA
     user = None
     CAMERA = VideoCamera()
-    t = Thread(target=CAMERA.run_server)
+    t = Thread(target=CAMERA.run_server) # 소켓통신을 위한 스레드
     t.start()
     if request.session.get('id'):
         user = User.objects.get(id=request.session.get('id'))
@@ -25,7 +25,6 @@ def index(request):
 
 
 def gen1(camera):
-    print('###')
     while len(camera.threads)==0:
         pass
     while True:
@@ -38,7 +37,6 @@ def video_stream1(request):
                     content_type='multipart/x-mixed-replace; boundary=frame')
 
 def gen2(camera):
-    print('@@@')
     while len(camera.threads)>=2 and True:
         frame = camera.threads[1].get_frame(1)
         yield (b'--frame\r\n'

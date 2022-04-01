@@ -5,19 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5aafa4aa-c666-4ddf-8c56-79f40e2299a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/data/falldown_alarm.mp3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RP/rp.py" beforeDir="false" afterPath="$PROJECT_DIR$/../RP/rp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SMARTCCTV.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SMARTCCTV.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cctv/DetectorLoader.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/DetectorLoader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cctv/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/camera.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cctv/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cctv/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/cctv/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cctv/live.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/live.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cctv/test1.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/cctv1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/cctv/test2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/cctv/cctv2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/singlePage/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/singlePage/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
