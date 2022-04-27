@@ -1,8 +1,11 @@
 # [디바이스마트2022] 고령층 care를 위한 낙상 모니터링 시스템 - SmartCCTV
 
 Role: Back-end Dev, Django, Front-end Dev, MySQL
+
 공모전: 디바이스마트 2022 ICT 공모전 제출
+
 소요시간: 2022.02 ~ 2022.03
+
 팀원 수: 4
 
 
